@@ -1,11 +1,11 @@
 /* See LICENSE file for copyright and license details. */
 
-#include <X11/XF86keysym.h>
+#include <X11/XF86keysym.h> /* Added this Library to include Function Keys */
 
-/* These Lines will sink yoour default volume keys. */
-static const char *upvol[]   = { "/usr/bin/pactl", "set-sink-volume", "0", "+5%",     NULL };
-static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
-static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
+/* These are added to increase and decrease sound volume. Using volume keys */
+static const char *incvol[]   = { "amixer", "-q", "sset", "Master", "5%+",     NULL };	/* I Use amixer not pulse audio */
+static const char *decvol[] = { "amixer", "-q", "sset", "Master", "5%-",     NULL };	/* Cause you know I don't like to put anyother interface on alsa */
+
 /* These lines will sink scrot to take Screen-Shots. */
 static const char *scrotcmd[]  = { "scrot", "-t", "25", NULL };
 static const char *scrotfocusedcmd[]  = { "scrot", "--focused", NULL };
@@ -15,8 +15,8 @@ static const unsigned int gappx     = 5;        /* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=10","fontawesome:size=10" };
-static const char dmenufont[]       = "monospace:size=10";
+static const char *fonts[]          = { "sourcecodepro:size=10","siji:size=10" };
+static const char dmenufont[]       = "sourcecodepro:size=10";
 //background color 
 static const char col_gray1[]       = "#222222";
 //inactive windoiw boreder color
@@ -24,9 +24,9 @@ static const char col_gray2[]       = "#444444";
 //font color
 static const char col_gray3[]       = "#bbbbbb";
 //current tag and current window font  color
-static const char col_gray4[]       = "#3c2424";
+static const char col_gray4[]       = "#282629";
 //Top bar second color (blue) and active window border color
-static const char col_cyan[]        = "#ef886f";
+static const char col_cyan[]        = "#e38d36";
 static const unsigned int baralpha = 0xd0;
 static const unsigned int borderalpha = OPAQUE;
 static const char *colors[][3]      = {
@@ -82,49 +82,48 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 static const char *termcmd[]  = { "st", NULL };
 
 static Key keys[] = {
-	/* modifier                     key        function        argument */
-	{ 0,                       XF86XK_AudioLowerVolume, spawn, {.v = downvol } },
-	{ 0,                       XF86XK_AudioMute, spawn, {.v = mutevol } },
-	{ 0,                       XF86XK_AudioRaiseVolume, spawn, {.v = upvol   } },
-	{ 0,            XK_Print,   spawn,      {.v = scrotcmd } },
-	{ ShiftMask,    XK_Print,   spawn,      {.v = scrotfocusedcmd } },
-	{ ControlMask,  XK_Print,   spawn,      SHCMD("sleep 1s;scrot --select") },
-	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_b,      togglebar,      {0} },
-	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
-	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
-	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
-	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY,                       XK_Return, zoom,           {0} },
-	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,                       XK_space,  setlayout,      {0} },
-	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
-	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
-	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
-	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	{ MODKEY,                       XK_minus,  setgaps,        {.i = -1 } },
-	{ MODKEY,                       XK_equal,  setgaps,        {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
-	TAGKEYS(                        XK_1,                      0)
-	TAGKEYS(                        XK_2,                      1)
-	TAGKEYS(                        XK_3,                      2)
-	TAGKEYS(                        XK_4,                      3)
-	TAGKEYS(                        XK_5,                      4)
-	TAGKEYS(                        XK_6,                      5)
-	TAGKEYS(                        XK_7,                      6)
-	TAGKEYS(                        XK_8,                      7)
-	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	/* modifier                     key                      function        argument */
+	{ 0,                            XF86XK_AudioLowerVolume, spawn,          {.v = decvol } },
+	{ 0,                            XF86XK_AudioRaiseVolume, spawn,          {.v = incvol   } },
+	{ 0,                            XK_Print,                spawn,          {.v = scrotcmd } },
+	{ ShiftMask,                    XK_Print,                spawn,          {.v = scrotfocusedcmd } },
+	{ ControlMask,                  XK_Print,                spawn,          SHCMD("sleep 1s;scrot --select") },
+	{ MODKEY,                       XK_p,                    spawn,          {.v = dmenucmd } },
+	{ MODKEY|ShiftMask,             XK_Return,               spawn,          {.v = termcmd } },
+	{ MODKEY,                       XK_b,                    togglebar,      {0} },
+	{ MODKEY,                       XK_j,                    focusstack,     {.i = +1 } },
+	{ MODKEY,                       XK_k,                    focusstack,     {.i = -1 } },
+	{ MODKEY,                       XK_i,                    incnmaster,     {.i = +1 } },
+	{ MODKEY,                       XK_d,                    incnmaster,     {.i = -1 } },
+	{ MODKEY,                       XK_h,                    setmfact,       {.f = -0.05} },
+	{ MODKEY,                       XK_l,                    setmfact,       {.f = +0.05} },
+	{ MODKEY,                       XK_Return,               zoom,           {0} },
+	{ MODKEY,                       XK_Tab,                  view,           {0} },
+	{ MODKEY|ShiftMask,             XK_c,                    killclient,     {0} },
+	{ MODKEY,                       XK_t,                    setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,                       XK_f,                    setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_m,                    setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       XK_space,                setlayout,      {0} },
+	{ MODKEY|ShiftMask,             XK_space,                togglefloating, {0} },
+	{ MODKEY,                       XK_0,                    view,           {.ui = ~0 } },
+	{ MODKEY|ShiftMask,             XK_0,                    tag,            {.ui = ~0 } },
+	{ MODKEY,                       XK_comma,                focusmon,       {.i = -1 } },
+	{ MODKEY,                       XK_period,               focusmon,       {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_comma,                tagmon,         {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_period,               tagmon,         {.i = +1 } },
+	{ MODKEY,                       XK_minus,                setgaps,        {.i = -1 } },
+	{ MODKEY,                       XK_equal,                setgaps,        {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_equal,                setgaps,        {.i = 0  } },
+	TAGKEYS(                        XK_1,                                              0)
+	TAGKEYS(                        XK_2,                                              1)
+	TAGKEYS(                        XK_3,                                              2)
+	TAGKEYS(                        XK_4,                     			   3)
+	TAGKEYS(                        XK_5,                     			   4)
+	TAGKEYS(                        XK_6,                     			   5)
+	TAGKEYS(                        XK_7,                                              6)
+	TAGKEYS(                        XK_8,                                              7)
+	TAGKEYS(                        XK_9,                                              8)
+	{ MODKEY|ShiftMask,             XK_q,                    quit,                  {0} },
 };
 
 /* button definitions */
