@@ -1,0 +1,34 @@
+#!/bin/sh
+
+#start my compositor
+picom -f &
+
+# adding these lines to display necessary details on dwm status bar
+while true; do
+        Network=$(nmcli device status | awk '{if ($3=="connected") print "" $4;}')
+        Battery=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | awk '/percentage/{print $2}')
+        IconBattery=$(echo -e "\ue24a")
+        BatteryStatus=$(acpi -a | awk '/on-line/{print "Charging"}')
+        IconBs=$(echo -e "\ue040")
+        Volume=$(amixer get Master | awk '/Mono/{print $4}' | grep -o '[0-9]\+%')
+        IconVolume=$(echo -e "\ue050")
+        IconTime=$(echo -e "\ue017")
+        DateTime=$(date +'%d %a %b %C %R')
+        IconFolder=$(echo -e "\ue1e1")
+        DiskFree=$(df -Ph | grep "/dev/sda1" | awk {'print $4'})
+        DiskTotal=$(df -Ph | grep "/dev/sda1" | awk {'print $2'})
+
+
+
+
+        xsetroot -name " $Network  $IconBattery$Battery $IconBs$BatteryStatus  $IconVolume$Volume  $IconFolder$DiskFree/$DiskTotal  $IconTime$DateTime"
+        sleep 3s
+done &
+
+# custom setting for nitrogen to restore wallpappers on start of X
+nitrogen --restore &
+
+# executing dwm on start
+exec dwm
+
+
