@@ -13,5 +13,5 @@ Other than that I have created a simple dwmbar script that you can put in your .
 Another thing is that I use Siji fonts not Fontawesome because it keeps sucking while I try Any different font with It So, In all my statusbar scripts not just for dwmbar but for my polybar scripts too I use Siji fonts which is available in AUR. 
 You can also check for It's availability as per as your distribution. 
 
-![alt text](https://i.ibb.co/F4YYdfC/2020-12-27-115512-1366x768-scrot.png) 
+![alt text](https://i.ibb.co/CtqPQhY/2021-01-02-125505-1366x768-scrot.png) 
 
