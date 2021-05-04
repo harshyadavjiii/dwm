@@ -1,4 +1,5 @@
-### Dynamic Window Manager (alias dwm)
+### Dynamic Window Manager 
+### (alias dwm)
 This my Initial Set-Up with the dynamic window manager by suckless which follows that whole suckless 
 philospy of Keeping code simple and under 2000 lines.
 
